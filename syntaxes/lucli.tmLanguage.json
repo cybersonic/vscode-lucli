@@ -1,0 +1,95 @@
+{
+  "scopeName": "source.lucli",
+  "patterns": [
+    { "include": "#shebang" },
+    { "include": "#comment" },
+    { "include": "#string" },
+    { "include": "#options" },
+    { "include": "#numbers" },
+    { "include": "#serverSubcommands" },
+    { "include": "#modulesSubcommands" },
+    { "include": "#firstWord" }
+  ],
+  "repository": {
+    "shebang": {
+      "patterns": [
+        {
+          "name": "comment.line.shebang.lucli",
+          "match": "^#!.*$"
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.lucli",
+          "match": "(^[ \t]*)#.*$"
+        }
+      ]
+    },
+    "string": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.lucli",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "match": "\\\\.", "name": "constant.character.escape.lucli" }
+          ]
+        },
+        {
+          "name": "string.quoted.single.lucli",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "match": "\\\\.", "name": "constant.character.escape.lucli" }
+          ]
+        }
+      ]
+    },
+    "options": {
+      "patterns": [
+        {
+          "name": "variable.parameter.option.long.lucli",
+          "match": "--[A-Za-z0-9-]+"
+        },
+        {
+          "name": "variable.parameter.option.short.lucli",
+          "match": "-[A-Za-z]"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "name": "constant.numeric.lucli",
+          "match": "\\b[0-9]+(\\.[0-9]+)*\\b"
+        }
+      ]
+    },
+    "serverSubcommands": {
+      "patterns": [
+        {
+          "name": "keyword.control.server.subcommand.lucli",
+          "match": "^\\s*(server)\\s+(start|stop|status|list|log|monitor|prune|config|debug)\\b"
+        }
+      ]
+    },
+    "modulesSubcommands": {
+      "patterns": [
+        {
+          "name": "keyword.control.modules.subcommand.lucli",
+          "match": "^\\s*(modules)\\s+(list|init|run|install)\\b"
+        }
+      ]
+    },
+    "firstWord": {
+      "patterns": [
+        {
+          "name": "entity.name.function.command.lucli",
+          "match": "^\\s*([A-Za-z][A-Za-z0-9_-]*)"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "vscode-lucli",
+  "displayName": "LuCLI Scripts",
+  "description": "Syntax highlighting and completion for LuCLI .lucli scripts",
+  "version": "0.0.1",
+  "publisher": "distrokid",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:lucli"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "lucli",
+        "aliases": ["LuCLI Script", "lucli"],
+        "extensions": [".lucli"],
+        "firstLine": "^#!.*\\blucli\\b",
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "lucli",
+        "scopeName": "source.lucli",
+        "path": "./syntaxes/lucli.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "echo \"No tests yet\""
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  }
+}
