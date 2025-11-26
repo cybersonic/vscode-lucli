@@ -4,13 +4,57 @@ import { TOP_LEVEL_COMMANDS, COMMAND_TREE } from "./commandsData";
 export function activate(context: vscode.ExtensionContext) {
   const provider = new LucliCompletionProvider();
 
-  const disposable = vscode.languages.registerCompletionItemProvider(
+  const completionDisposable = vscode.languages.registerCompletionItemProvider(
     { language: "lucli" },
     provider,
     " ", "-", "\t"
   );
 
-  context.subscriptions.push(disposable);
+  const runCommandDisposable = vscode.commands.registerCommand(
+    "lucli.runFile",
+    async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor || editor.document.languageId !== "lucli") {
+        vscode.window.showErrorMessage("No active LuCLI file to run.");
+        return;
+      }
+
+      // Ensure latest changes are saved before running
+      await editor.document.save();
+
+      const filePath = editor.document.uri.fsPath;
+      const config = vscode.workspace.getConfiguration();
+      const lucliPath = config.get<string>("lucli.path") || "";
+
+      let command: string;
+      let args: string[] = [];
+
+      if (!lucliPath) {
+        // Assume 'lucli' is available on PATH
+        command = "lucli";
+        args = [filePath];
+      } else if (lucliPath.toLowerCase().endsWith(".jar")) {
+        // Run via java -jar path/to/lucli.jar script.lucli
+        command = "java";
+        args = ["-jar", lucliPath, filePath];
+      } else {
+        // Direct binary path
+        command = lucliPath;
+        args = [filePath];
+      }
+
+      const terminal = vscode.window.createTerminal({
+        name: "LuCLI",
+        cwd: vscode.workspace.workspaceFolders?.[0]?.uri.fsPath,
+      });
+
+      const fullCommand = [command, ...args].join(" ");
+      terminal.show(true);
+      terminal.sendText(fullCommand, true);
+    }
+  );
+
+  context.subscriptions.push(completionDisposable, runCommandDisposable);
 }
 
 export function deactivate() {

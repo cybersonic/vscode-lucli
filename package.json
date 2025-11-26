@@ -1,18 +1,23 @@
 {
   "name": "vscode-lucli",
-  "displayName": "LuCLI Scripts",
+  "displayName": "LuCLI",
   "description": "Syntax highlighting and completion for LuCLI .lucli scripts",
-  "version": "0.0.1",
-  "publisher": "distrokid",
+  "version": "0.0.2",
+  "publisher": "markdrew",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cybersonic/vscode-lucli.git"
+  },
   "engines": {
     "vscode": "^1.80.0"
   },
+  "icon": "assets/lucli-icon-128.png",
   "categories": [
     "Programming Languages"
   ],
+  "license": "MIT",
   "main": "./out/extension.js",
   "activationEvents": [
-    "onLanguage:lucli"
   ],
   "contributes": {
     "languages": [
@@ -30,13 +35,62 @@
         "scopeName": "source.lucli",
         "path": "./syntaxes/lucli.tmLanguage.json"
       }
+    ],
+    "commands": [
+      {
+        "command": "lucli.runFile",
+        "title": "Run LuCLI File",
+        "category": "LuCLI"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "lucli.runFile",
+          "when": "resourceLangId == lucli",
+          "group": "navigation@10"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "lucli.runFile",
+          "when": "resourceLangId == lucli",
+          "group": "navigation@10"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "LuCLI",
+      "properties": {
+        "lucli.path": {
+          "type": "string",
+          "default": "",
+          "description": "Path to LuCLI executable or JAR file. Leave empty to use 'lucli' from PATH. If a .jar file is provided, 'java -jar' will be used."
+        }
+      }
+    },
+    "jsonValidation": [
+      {
+        "fileMatch": ["/lucee.json", "lucee.json"],
+        "url": "https://lucli.dev/schemas/v1/lucee.schema.json"
+      },
+      {
+        "fileMatch": ["/module.json", "module.json"],
+        "url": "https://lucli.dev/schemas/v1/module.schema.json"
+      }
     ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "test": "echo \"No tests yet\""
+    "test": "echo \"No tests yet\"",
+    "package": "vsce package",
+    "publish": "vsce publish",
+    "release:patch": "npm version patch && npm run package && npm run publish",
+    "release:minor": "npm version minor && npm run package && npm run publish",
+    "release:major": "npm version major && npm run package && npm run publish"
   },
   "devDependencies": {
     "@types/vscode": "^1.80.0",
