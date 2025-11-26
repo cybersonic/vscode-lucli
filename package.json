@@ -2,7 +2,7 @@
   "name": "vscode-lucli",
   "displayName": "LuCLI",
   "description": "Syntax highlighting and completion for LuCLI .lucli scripts",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "publisher": "markdrew",
   "repository": {
     "type": "git",
@@ -17,14 +17,18 @@
   ],
   "license": "MIT",
   "main": "./out/extension.js",
-  "activationEvents": [
-  ],
+  "activationEvents": [],
   "contributes": {
     "languages": [
       {
         "id": "lucli",
-        "aliases": ["LuCLI Script", "lucli"],
-        "extensions": [".lucli"],
+        "aliases": [
+          "LuCLI Script",
+          "lucli"
+        ],
+        "extensions": [
+          ".lucli"
+        ],
         "firstLine": "^#!.*\\blucli\\b",
         "configuration": "./language-configuration.json"
       }
@@ -72,11 +76,17 @@
     },
     "jsonValidation": [
       {
-        "fileMatch": ["/lucee.json", "lucee.json"],
+        "fileMatch": [
+          "/lucee.json",
+          "lucee.json"
+        ],
         "url": "https://lucli.dev/schemas/v1/lucee.schema.json"
       },
       {
-        "fileMatch": ["/module.json", "module.json"],
+        "fileMatch": [
+          "/module.json",
+          "module.json"
+        ],
         "url": "https://lucli.dev/schemas/v1/module.schema.json"
       }
     ]
