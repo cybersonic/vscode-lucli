@@ -2,8 +2,11 @@
   "scopeName": "source.lucli",
   "patterns": [
     { "include": "#shebang" },
+    { "include": "#envDirective" },
     { "include": "#comment" },
     { "include": "#string" },
+    { "include": "#variable" },
+    { "include": "#lineContinuation" },
     { "include": "#options" },
     { "include": "#numbers" },
     { "include": "#serverSubcommands" },
@@ -16,6 +19,17 @@
         {
           "name": "comment.line.shebang.lucli",
           "match": "^#!.*$"
+        }
+      ]
+    },
+    "envDirective": {
+      "patterns": [
+        {
+          "name": "keyword.control.directive.env.lucli",
+          "match": "^\\s*#@(env:[A-Za-z0-9_,!-]+|dev|development|staging|stage|prod|production|test|testing|local|end)\\b.*$",
+          "captures": {
+            "0": { "name": "meta.preprocessor.env.lucli" }
+          }
         }
       ]
     },
@@ -34,6 +48,7 @@
           "begin": "\"",
           "end": "\"",
           "patterns": [
+            { "include": "#variable" },
             { "match": "\\\\.", "name": "constant.character.escape.lucli" }
           ]
         },
@@ -44,6 +59,34 @@
           "patterns": [
             { "match": "\\\\.", "name": "constant.character.escape.lucli" }
           ]
+        }
+      ]
+    },
+    "variable": {
+      "patterns": [
+        {
+          "name": "variable.other.secret.lucli",
+          "match": "\\$\\{secret:[^}]+\\}"
+        },
+        {
+          "name": "variable.other.env.lucli",
+          "match": "\\$\\{ENV_[^}]+\\}"
+        },
+        {
+          "name": "variable.other.placeholder.lucli",
+          "match": "\\$\\{[^}]+\\}"
+        },
+        {
+          "name": "variable.other.command-substitution.lucli",
+          "match": "\\$\\([^)]+\\)"
+        }
+      ]
+    },
+    "lineContinuation": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.line-continuation.lucli",
+          "match": "\\\\\\s*$"
         }
       ]
     },

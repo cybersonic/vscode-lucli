@@ -2,7 +2,7 @@
   "name": "vscode-lucli",
   "displayName": "LuCLI",
   "description": "Syntax highlighting and completion for LuCLI .lucli scripts",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "publisher": "markdrew",
   "repository": {
     "type": "git",
@@ -17,7 +17,10 @@
   ],
   "license": "MIT",
   "main": "./out/extension.js",
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:cfml",
+    "onLanguage:lucee"
+  ],
   "contributes": {
     "languages": [
       {
@@ -33,6 +36,13 @@
         "configuration": "./language-configuration.json"
       }
     ],
+    "taskDefinitions": [
+      {
+        "type": "Lucee Lint",
+        "required": [],
+        "properties": {}
+      }
+    ],
     "grammars": [
       {
         "language": "lucli",
@@ -44,6 +54,31 @@
       {
         "command": "lucli.runFile",
         "title": "Run LuCLI File",
+        "category": "LuCLI"
+      },
+      {
+        "command": "lucli.server.startFromLuceeJson",
+        "title": "Start Lucee server from lucee.json",
+        "category": "LuCLI"
+      },
+      {
+        "command": "lucli.server.stopFromLuceeJson",
+        "title": "Stop Lucee server from lucee.json",
+        "category": "LuCLI"
+      },
+      {
+        "command": "lucli.server.openWebrootFromLuceeJson",
+        "title": "Open Lucee webroot from lucee.json",
+        "category": "LuCLI"
+      },
+      {
+        "command": "lucli.server.openInBrowserFromLuceeJson",
+        "title": "Open Lucee server in browser from lucee.json",
+        "category": "LuCLI"
+      },
+      {
+        "command": "lucli.download",
+        "title": "Download or Update LuCLI",
         "category": "LuCLI"
       }
     ],
@@ -61,6 +96,28 @@
           "when": "resourceLangId == lucli",
           "group": "navigation@10"
         }
+      ],
+      "explorer/context": [
+        {
+          "command": "lucli.server.startFromLuceeJson",
+          "when": "resourceFilename == lucee.json",
+          "group": "navigation@10"
+        },
+        {
+          "command": "lucli.server.stopFromLuceeJson",
+          "when": "resourceFilename == lucee.json",
+          "group": "navigation@11"
+        },
+        {
+          "command": "lucli.server.openWebrootFromLuceeJson",
+          "when": "resourceFilename == lucee.json",
+          "group": "navigation@12"
+        },
+        {
+          "command": "lucli.server.openInBrowserFromLuceeJson",
+          "when": "resourceFilename == lucee.json",
+          "group": "navigation@13"
+        }
       ]
     },
     "configuration": {
@@ -71,6 +128,21 @@
           "type": "string",
           "default": "",
           "description": "Path to LuCLI executable or JAR file. Leave empty to use 'lucli' from PATH. If a .jar file is provided, 'java -jar' will be used."
+        },
+        "lucli.lint.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable Lucee linting on open and save for CFML / Lucee files. Requires LuCLI to be installed or downloaded."
+        },
+        "lucli.daemon.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use the LuCLI daemon for linting when available. If no daemon is listening on the configured port, the extension will start one automatically."
+        },
+        "lucli.daemon.port": {
+          "type": "number",
+          "default": 10000,
+          "description": "TCP port on localhost where the LuCLI daemon listens for JSON commands."
         }
       }
     },
@@ -78,9 +150,19 @@
       {
         "fileMatch": [
           "/lucee.json",
-          "lucee.json"
+          "lucee.json",
+          "lucee-*.json",
+          "lucee_*.json"
         ],
         "url": "https://lucli.dev/schemas/v1/lucee.schema.json"
+      },
+      {
+        "fileMatch": [
+          "/CFConfig.json",
+          ".CFConfig.json",
+          "lucee-config.json"
+        ],
+        "url": "https://lucee.org/schemas/v1/lucee.config.schema.json"
       },
       {
         "fileMatch": [
@@ -103,7 +185,9 @@
     "release:major": "npm version major && npm run package && npm run publish"
   },
   "devDependencies": {
+    "@types/node": "^25.0.3",
     "@types/vscode": "^1.80.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vsce": "^2.15.0"
   }
 }

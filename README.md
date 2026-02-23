@@ -1,58 +1,65 @@
-# vscode-lucli
+# LuCLI for Visual Studio Code
 
-Basic VS Code support for [LuCLI](https://github.com/lucee/lucli) `.lucli` scripts.
+First-class [LuCLI](https://lucli.dev/) support inside VS Code - write, run and lint Lucee CFML projects without leaving the editor.
+
+<!-- TODO: ![feature-overview](images/overview.gif) -->
 
 ## Features
 
-- Treats `.lucli` files as a dedicated language
-- Syntax highlighting for:
-  - Shebang line (`#!/usr/bin/env lucli`)
-  - `#` comments
-  - First word commands (e.g. `server`, `modules`, `cfml`, `lint`, `ls`, `cd`)
-  - Known `server` / `modules` subcommands
-  - Flags / options like `--version`, `--name`, `--port`
-  - Strings and numbers
-- Simple completion:
-  - First token: LuCLI/internal commands
-  - Second token for `server` / `modules`: known subcommands
-  - Later tokens starting with `-`: options for that subcommand
-- JSON schema–aware support for LuCLI configuration files:
-  - Validation and IntelliSense for `lucee.json` project server configuration files.
-  - Validation and IntelliSense for `module.json` LuCLI module metadata files.
+**Write `.lucli` scripts with full editor support**
+Syntax highlighting, command completion and flag suggestions for LuCLI scripts.
 
-### LuCLI configuration files
+<!-- TODO: ![completion](images/completion.gif) -->
 
-This extension understands the standard JSON files that LuCLI itself reads and writes, and gives you editor feedback while you edit them.
+**Run scripts in one click**
+Run the current `.lucli` file straight from the editor title bar, context menu, or Command Palette.
 
-#### `lucee.json` (project server configuration)
+<!-- TODO: ![run-file](images/run-file.gif) -->
 
-When you have a `lucee.json` in your workspace, the extension:
+**Manage Lucee servers from `lucee.json`**
+Right-click a `lucee.json` in the Explorer to start, stop, or open a Lucee server - no terminal required.
 
-- Applies the published `lucee.json` JSON Schema from `https://lucli.dev/schemas/v1/lucee.schema.json`.
-- Offers key and value completion for the known LuCLI server settings (for example `name`, `version`, `port`, `webroot`, `monitoring`, `jvm`, `urlRewrite`, `admin`, and `agents`).
-- Highlights type errors (for example a string where a number is expected) and unknown properties.
+**IntelliSense for LuCLI config files**
+Schema-driven validation and autocomplete for `lucee.json`, `module.json`, and `CFConfig.json`.
 
-This is the same shape that LuCLI uses when it generates or updates `lucee.json`, so what you see in VS Code matches what the CLI expects.
+**Lucee / CFML linting** (opt-in)
+Real-time diagnostics on open and save powered by `lucli lint`. Enable it in settings when you're ready.
 
-#### `module.json` (LuCLI module metadata)
+**Automatic LuCLI install**
+Don't have LuCLI yet? The extension will offer to download the latest version for you (requires Java 17+).
 
-For `module.json` files created by `lucli modules init` (usually inside your LuCLI modules directory), the extension:
+## Commands
 
-- Applies the published `module.json` JSON Schema from `https://lucli.dev/schemas/v1/module.schema.json`.
-- Provides completion for common metadata fields such as `name`, `version`, `description`, `author`, `license`, `keywords`, `main`, and `created`.
-- Validates values against the schema so you can spot mistakes before running the module.
+All commands are available from the Command Palette (`Cmd+Shift+P`):
 
-These schemas are versioned (currently `v1`) and served from `lucli.dev`, so other tools and editors can reuse the same definitions.
+- **LuCLI: Run LuCLI File** - run the active `.lucli` script
+- **LuCLI: Download or Update LuCLI** - fetch the latest LuCLI release
+- **LuCLI: Start / Stop / Open Lucee server** - server management from `lucee.json`
 
-## Getting started
+## Settings
 
-1. Run `npm install` in this folder to install dev dependencies.
-2. Run `npm run watch` to build in watch mode.
-3. Press `F5` in VS Code to launch an Extension Development Host.
-4. Open or create a `.lucli` file and start typing commands.
+| Setting | Type | Default | Description |
+|---|---|---|---|
+| `lucli.path` | `string` | `""` | Path to LuCLI executable or JAR. Leave empty to use the auto-downloaded JAR or `lucli` from PATH. |
+| `lucli.lint.enabled` | `boolean` | `false` | Enable Lucee linting on open and save for CFML / Lucee files. |
+| `lucli.daemon.enabled` | `boolean` | `true` | Use the LuCLI daemon for faster linting. Only applies when linting is enabled. |
+| `lucli.daemon.port` | `number` | `10000` | TCP port for the LuCLI lint daemon. |
 
-## Notes
+## Configuration files
 
-- Completion is currently static (no calls to the LuCLI binary).
-- The command tree is defined in `src/commandsData.ts`.
-- Future work: optional dynamic completion by shelling out to `lucli --complete` when available.
+The extension provides JSON Schema support for LuCLI's configuration files. You get validation, autocomplete and hover documentation out of the box for:
+
+- **`lucee.json`** - project server configuration (`name`, `port`, `webroot`, `jvm`, etc.)
+- **`module.json`** - LuCLI module metadata (`name`, `version`, `main`, `keywords`, etc.)
+- **`CFConfig.json`** - Lucee engine configuration
+
+Schemas are loaded from [lucli.dev](https://lucli.dev/) and versioned independently.
+
+## Contributing
+
+1. `npm install`
+2. `npm run watch`
+3. Press **F5** to launch an Extension Development Host.
+4. Open or create a `.lucli` file to exercise the extension.
+
+See [AGENTS.md](AGENTS.md) for architecture notes and coding guidelines.

@@ -2,6 +2,12 @@
   "comments": {
     "lineComment": "#"
   },
+  "folding": {
+    "markers": {
+      "start": "^\\s*#@(env:[^\\s]+|dev|development|staging|stage|prod|production|test|testing|local)\\b",
+      "end": "^\\s*#@end\\b"
+    }
+  },
   "brackets": [
     ["{", "}"],
     ["[", "]"],
